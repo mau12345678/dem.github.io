@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Новогодний кроссворд</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom, #f0f8ff, #e0f7fa);
+      text-align: center;
+      padding: 20px;
+      color: #01579b;
+    }
+    h1 {
+      color: #c62828;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.15);
+      margin-bottom: 15px;
+    }
+    .crossword-container {
+      display: inline-block;
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      margin: 15px auto;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 34px);
+      grid-gap: 1px;
+      margin: 0 auto;
+    }
+    .cell {
+      width: 34px;
+      height: 34px;
+      background: white;
+      border: 1px solid #283593;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 15px;
+      color: #0d47a1;
+      user-select: none;
+    }
+    .black {
+      background: #2c3e50;
+    }
+    .word-list {
+      max-width: 600px;
+      margin: 25px auto;
+      padding: 15px;
+      background: #e8f5e9;
+      border-radius: 10px;
+      text-align: left;
+    }
+    .word-list h2 {
+      color: #1b5e20;
+      text-align: center;
+      margin-top: 0;
+    }
+    .word-list ol {
+      padding-left: 20px;
+    }
+    .word-list li {
+      margin: 6px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>❄️ Новогодний кроссворд ❄️</h1>
+
+  <div class="crossword-container">
+    <div class="grid" id="crossword"></div>
+  </div>
+
+  <div class="word-list">
+    <h2>Слова в кроссворде:</h2>
+    <ol>
+      <li>Снегурочка</li>
+      <li>Снежинка</li>
+      <li>Колпак</li>
+      <li>Подарок</li>
+      <li>Уголь</li>
+      <li>Ёлка</li>
+      <li>Снег</li>
+      <li>Хлопушка</li>
+      <li>Сосулька</li>
+      <li>Снеговик</li>
+    </ol>
+  </div>
+
+  <script>
+    // Инициализация пустой сетки 12x12
+    const SIZE = 12;
+    const grid = Array(SIZE).fill(null).map(() => Array(SIZE).fill(''));
+
+    // Вручную размещённые слова с пересечениями
+    const words = [
+      // Горизонтальные (row, col, word)
+      { word: 'СНЕГУРОЧКА', row: 0, col: 1, dir: 'h' }, // 10 букв: col 1–10
+      { word: 'СНЕЖИНКА',  row: 2, col: 2, dir: 'h' },  // 9 букв: col 2–10
+      { word: 'СНЕГОВИК',  row: 4, col: 3, dir: 'h' },  // 8 букв: col 3–10
+      { word: 'СОСУЛЬКА',  row: 6, col: 2, dir: 'h' },  // 8 букв: col 2–9
+      { word: 'ХЛОПУШКА',  row: 8, col: 2, dir: 'h' },  // 8 букв: col 2–9
+      { word: 'ПОДАРОК',   row: 10, col: 3, dir: 'h' }, // 7 букв: col 3–9
+      { word: 'КОЛПАК',    row: 3, col: 6, dir: 'h' },  // 6 букв: col 6–11
+      { word: 'УГОЛЬ',     row: 5, col: 7, dir: 'h' },  // 5 букв: col 7–11
+
+      // Вертикальные
+      { word: 'СНЕГ',      row: 0, col: 1, dir: 'v' },  // С из "Снегурочки" → вниз: С,Н,Е,Г
+      { word: 'ЁЛКА',      row: 2, col: 4, dir: 'v' },  // Ё из "Снежинки" (позиция [2][4] = 'Ё') → вниз: Ё,Л,К,А
+    ];
+
+    // Заполнение сетки
+    words.forEach(item => {
+      const { word, row, col, dir } = item;
+      for (let i = 0; i < word.length; i++) {
+        if (dir === 'h') {
+          if (row < SIZE && col + i < SIZE) {
+            grid[row][col + i] = word[i];
+          }
+        } else if (dir === 'v') {
+          if (row + i < SIZE && col < SIZE) {
+            grid[row + i][col] = word[i];
+          }
+        }
+      }
+    });
+
+    // Генерация HTML-сетки
+    const crosswordEl = document.getElementById('crossword');
+    for (let r = 0; r < SIZE; r++) {
+      for (let c = 0; c < SIZE; c++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        if (grid[r][c] === '') {
+          cell.classList.add('black');
+        } else {
+          cell.textContent = grid[r][c];
+        }
+        crosswordEl.appendChild(cell);
+      }
+    }
+  </script>
+
+</body>
+</html>

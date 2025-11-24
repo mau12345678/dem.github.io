@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Christmas Crossword</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #e3f2fd, #ffffff);
+      text-align: center;
+      padding: 20px;
+      color: #b71c1c;
+    }
+    h1 {
+      color: #d32f2f;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .crossword-container {
+      display: inline-block;
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      margin: 15px auto;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(7, 40px);
+      grid-gap: 1px;
+      margin: 0 auto;
+    }
+    .cell {
+      width: 40px;
+      height: 40px;
+      background: white;
+      border: 1px solid #1a237e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 18px;
+      color: #0d47a1;
+      user-select: none;
+    }
+    .black {
+      background: #37474f;
+    }
+    .word-list {
+      max-width: 500px;
+      margin: 25px auto;
+      padding: 15px;
+      background: #e8f5e9;
+      border-radius: 10px;
+      text-align: left;
+    }
+    .word-list h2 {
+      color: #2e7d32;
+      text-align: center;
+    }
+    .word-list ul {
+      padding-left: 20px;
+    }
+    .word-list li {
+      margin: 8px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎄 Christmas Crossword 🎄</h1>
+
+  <div class="crossword-container">
+    <div class="grid" id="crossword"></div>
+  </div>
+
+  <div class="word-list">
+    <h2>Words in the crossword:</h2>
+    <ul>
+      <li>SNOW</li>
+      <li>STAR</li>
+      <li>TREE</li>
+      <li>ELF</li>
+      <li>GIFT</li>
+    </ul>
+  </div>
+
+  <script>
+    const SIZE = 7;
+    const grid = Array(SIZE).fill(null).map(() => Array(SIZE).fill(''));
+
+    const words = [
+      { word: 'SNOW', row: 0, col: 2, dir: 'h' },
+      { word: 'STAR', row: 0, col: 2, dir: 'v' },
+      { word: 'TREE', row: 2, col: 1, dir: 'h' },
+      { word: 'ELF', row: 2, col: 3, dir: 'v' },
+      { word: 'GIFT', row: 4, col: 1, dir: 'h' },
+    ];
+
+    words.forEach(({ word, row, col, dir }) => {
+      for (let i = 0; i < word.length; i++) {
+        if (dir === 'h') {
+          if (row < SIZE && col + i < SIZE) {
+            grid[row][col + i] = word[i];
+          }
+        } else if (dir === 'v') {
+          if (row + i < SIZE && col < SIZE) {
+            grid[row + i][col] = word[i];
+          }
+        }
+      }
+    });
+
+    const crosswordEl = document.getElementById('crossword');
+    for (let r = 0; r < SIZE; r++) {
+      for (let c = 0; c < SIZE; c++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        if (grid[r][c] === '') {
+          cell.classList.add('black');
+        } else {
+          cell.textContent = grid[r][c];
+        }
+        crosswordEl.appendChild(cell);
+      }
+    }
+  </script>
+
+</body>
+</html>
